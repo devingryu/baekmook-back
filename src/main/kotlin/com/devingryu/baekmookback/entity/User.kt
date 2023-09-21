@@ -17,8 +17,6 @@ class User(
     private var password: String,
     @Column(nullable = false)
     var name: String,
-    @Column(name = "is_instructor", nullable = false)
-    var isInstructor: Boolean,
 ): UserDetails {
 
     @field:CreationTimestamp
