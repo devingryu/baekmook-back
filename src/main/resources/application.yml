@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    group:
+      local:
+        - common-local
+        - secret-local
+      dev:
+        - common-dev
+        - secret-dev
+      test:
+        - common-test
+        - secret-test
+    include:
+      - common
+      - secret
