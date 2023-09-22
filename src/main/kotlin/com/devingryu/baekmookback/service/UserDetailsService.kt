@@ -4,6 +4,7 @@ import com.devingryu.baekmookback.repository.UserRepository
 import com.devingryu.baekmookback.dto.BaseException
 import com.devingryu.baekmookback.dto.BaseResponseCode
 import com.devingryu.baekmookback.entity.User
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
@@ -16,8 +17,13 @@ class UserDetailsService(private val userRepository: UserRepository): UserDetail
     }
 
     fun loadMemberByEmail(email: String?): User {
-        if (email == null) throw BaseException(BaseResponseCode.BAD_REQUEST)
+        if (email == null) throw BaseException(BaseResponseCode.ACCESS_TOKEN_INVALID)
         return userRepository.findByEmail(email) ?: throw BaseException(BaseResponseCode.USER_NOT_FOUND)
+    }
+
+    fun loadMemberById(id: Long?): User {
+        if (id == null) throw BaseException(BaseResponseCode.ACCESS_TOKEN_INVALID)
+        return userRepository.findByIdOrNull(id) ?: throw BaseException(BaseResponseCode.USER_NOT_FOUND)
     }
 
 }

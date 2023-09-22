@@ -25,7 +25,7 @@ class User(
     @Column(nullable = false)
     private val enabled: Boolean = true
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE])
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE])
     val authorities: Set<UserAuthority> = hashSetOf()
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val out = ArrayList<GrantedAuthority>()

@@ -2,7 +2,7 @@ package com.devingryu.baekmookback.dto.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class UserRefreshRequestDto(
+data class RefreshRequestDto(
     @JsonProperty("refresh_token")
     val refreshToken: String
 )

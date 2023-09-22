@@ -34,8 +34,7 @@ class WebSecurityConfig(private val jwtTokenProvider: JwtTokenProvider) {
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) } //
             .authorizeHttpRequests {
                 it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/register/**", "/login/**", "/logout/**", "/refresh/**").permitAll()
-                    .requestMatchers("/files/**").permitAll()
+                    .requestMatchers("/api/register/**", "/api/login/**", "/api/logout/**", "/api/refresh/**").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(

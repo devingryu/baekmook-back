@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus
 enum class BaseResponseCode(val status: HttpStatus, val message: String, val messageTranslated: String, val clazz: String) {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad Request", "잘못된 요청입니다.", "bad_request_exception"),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "Wrong password. Please try again.", "잘못된 비밀번호입니다. 다시 입력해주세요.", "wrong_password_exception"),
-    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "Duplicate email. Please try again.", "중복된 이메일입니다. 다시 입력해주세요.", "duplicate_email_exception"),
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "Email already in use.", "이미 사용 중인 이메일입니다.", "duplicate_email_exception"),
+    DUPLICATE_STUDENT_ID(HttpStatus.BAD_REQUEST, "Student ID is already in use.", "이미 사용 중인 학번입니다.", "duplicate_student_id_exception"),
 
     ACCESS_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "Login token is invalid", "로그인 정보가 유효하지 않습니다.", "access_token_invalid_exception"),
     REFRESH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "Login refresh token expired", "로그인 유지 정보가 만료되었습니다.", "refresh_token_invalid_exception"),

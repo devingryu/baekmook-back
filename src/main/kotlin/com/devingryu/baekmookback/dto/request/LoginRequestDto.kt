@@ -1,6 +1,6 @@
 package com.devingryu.baekmookback.dto.request
 
-data class UserLoginRequestDto(
+data class LoginRequestDto(
     val email: String,
     val password: String,
 )

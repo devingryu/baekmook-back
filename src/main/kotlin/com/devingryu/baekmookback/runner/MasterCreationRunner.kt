@@ -19,9 +19,9 @@ class MasterCreationRunner(
     private val authorityRepository: AuthorityRepository,
     private val memberAuthorityRepository: UserAuthorityRepository,
     private val passwordEncoder: PasswordEncoder,
-    @Value("\${osmu.master.username}")
+    @Value("\${baekmook.master.username}")
     private val masterUsername: String?,
-    @Value("\${osmu.master.password}")
+    @Value("\${baekmook.master.password}")
     private val masterPassword: String?,
 ) : ApplicationRunner {
     val log = logger()

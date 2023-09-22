@@ -1,6 +1,8 @@
 package com.devingryu.baekmookback.security
 
 import com.devingryu.baekmookback.common.TokenInfo
+import com.devingryu.baekmookback.dto.BaseException
+import com.devingryu.baekmookback.dto.BaseResponseCode
 import com.devingryu.baekmookback.service.UserDetailsService
 import com.devingryu.baekmookback.util.Extensions.toDate
 import io.jsonwebtoken.Jwts
@@ -91,7 +93,7 @@ class JwtTokenProvider(
     fun getAuthentication(token: String): Authentication? {
         return try {
             val parsed = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
-            val userDetails = userDetailsService.loadMemberByEmail(parsed.body.subject)
+            val userDetails = userDetailsService.loadMemberById(parsed.body.subject.toLongOrNull())
 
             if (parsed.body["tokenType"]!! == TOKEN_TYPE_ACCESS)
                 UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities())

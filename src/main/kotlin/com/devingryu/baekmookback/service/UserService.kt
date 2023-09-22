@@ -3,52 +3,66 @@ package com.devingryu.baekmookback.service
 import com.devingryu.baekmookback.common.TokenInfo
 import com.devingryu.baekmookback.dto.BaseException
 import com.devingryu.baekmookback.dto.BaseResponseCode
-import com.devingryu.baekmookback.dto.request.UserLoginRequestDto
-import com.devingryu.baekmookback.dto.request.UserRegisterRequestDto
 import com.devingryu.baekmookback.dto.request.UserUpdateInfoRequestDto
 import com.devingryu.baekmookback.entity.User
 import com.devingryu.baekmookback.repository.UserRepository
 import com.devingryu.baekmookback.security.JwtTokenProvider
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.Throws
 
 @Service
-class UserService(private val UserRepository: UserRepository, private val jwtTokenProvider: JwtTokenProvider) {
+class UserService(private val userRepository: UserRepository, private val jwtTokenProvider: JwtTokenProvider) {
 
     @Throws(BaseException::class)
     fun findUserByEmail(email: String): User
-    = UserRepository.findByEmail(email) ?: throw BaseException(BaseResponseCode.USER_NOT_FOUND)
+    = userRepository.findByEmail(email) ?: throw BaseException(BaseResponseCode.USER_NOT_FOUND)
 
     fun checkUserByEmail(email: String): Boolean
-    = UserRepository.existsByEmail(email)
+    = userRepository.existsByEmail(email)
 
-    fun createUser(user: User): User
-    = UserRepository.save(user)
+    @Throws(BaseException::class)
+    fun findUserById(id: Long): User
+            = userRepository.findByIdOrNull(id) ?: throw BaseException(BaseResponseCode.USER_NOT_FOUND)
+
+    fun checkUserById(id: Long): Boolean
+            = userRepository.existsById(id)
+
+    fun createUser(user: User): User {
+        return userRepository.save(user)
+    }
 
 
-    fun login(req: UserLoginRequestDto): TokenInfo
-    = jwtTokenProvider.createAllToken(req.email)
+    fun login(userPk: Long): TokenInfo
+    = jwtTokenProvider.createAllToken(userPk.toString())
 
     fun logout(): String
     = jwtTokenProvider.createInvalidationCookie()
 
-    fun refresh(token: String): TokenInfo {
+    fun refresh(token: String): Pair<User, TokenInfo> {
         if (!jwtTokenProvider.validateToken(token)) throw BaseException(BaseResponseCode.REFRESH_TOKEN_INVALID)
         val userPk = jwtTokenProvider.getUserPkFromRefreshToken(token)
             ?: throw BaseException(BaseResponseCode.REFRESH_TOKEN_INVALID)
+        val tokens = jwtTokenProvider.createAllToken(userPk)
+        val user = try {
+            userRepository.findById(userPk.toLong()).orElseThrow()
+        } catch (e: Exception) {
+            throw BaseException(BaseResponseCode.REFRESH_TOKEN_INVALID)
+        }
 
-        return jwtTokenProvider.createAllToken(userPk)
+        return user to tokens
     }
 
     @Transactional(readOnly = false)
-    fun update(userPk: String, req: UserUpdateInfoRequestDto) {
-        val found = UserRepository.findByEmail(userPk)
+    fun update(userPk: String, req: UserUpdateInfoRequestDto): User {
+        val found = userRepository.findByEmail(userPk)
             ?: throw BaseException(BaseResponseCode.INTERNAL_SERVER_ERROR)
         if (req.newName != null)
             found.name = req.newName
         req.newPassword?.let {
             found.password = it
         }
+        return found
     }
 }

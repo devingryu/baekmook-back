@@ -21,7 +21,7 @@ class MeResponseDto(
                 "ROLE_STUDENT" in authorities -> "student"
                 else -> "unknown"
             }
-            MeResponseDto(username, password, role, createdDate.toTimestamp())
+            MeResponseDto(username, name, role, createdDate.toTimestamp())
         }
     }
 }
