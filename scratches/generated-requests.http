@@ -1,0 +1,40 @@
+###
+POST http://localhost:30700/api/register
+Content-Type: application/json
+
+{
+  "id": 2021320030,
+  "email": "bb",
+  "password": "bb",
+  "name": "name2",
+  "isLecturer": false
+}
+
+###
+POST http://localhost:30700/api/login
+Content-Type: application/json
+
+{
+  "email": "bb",
+  "password": "bb"
+}
+
+###
+POST http://localhost:30700/api/refresh
+
+###
+POST http://localhost:30700/api/logout
+
+###
+PATCH http://localhost:30700/api/update-user
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDMwIiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTM2NTY5OCwiZXhwIjoxNjk1MzY3NDk4fQ.CFXfrDhYLq887RHTgw1WSxgccTNeuLiUUAGmRPrM64mIQKyNnEfEXA9vNjiQcT5PjXc5p0Rfp6aCQMjFT5WfYQ
+Content-Type: application/json
+
+{
+  "current_password": "bb",
+  "new_name": "newName"
+}
+
+###
+GET http://localhost:30700/api/me
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDMwIiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTM2NTY5OCwiZXhwIjoxNjk1MzY3NDk4fQ.CFXfrDhYLq887RHTgw1WSxgccTNeuLiUUAGmRPrM64mIQKyNnEfEXA9vNjiQcT5PjXc5p0Rfp6aCQMjFT5WfYQ
