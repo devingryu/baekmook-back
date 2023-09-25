@@ -1,5 +1,6 @@
 package com.devingryu.baekmookback.entity
 
+import com.devingryu.baekmookback.entity.lecture.LectureUser
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.springframework.security.core.GrantedAuthority
@@ -27,6 +28,9 @@ class User(
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE])
     val authorities: Set<UserAuthority> = hashSetOf()
+
+    @OneToMany(mappedBy = "user")
+    val lectures: Set<LectureUser> = hashSetOf()
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val out = ArrayList<GrantedAuthority>()
         authorities.forEach {
