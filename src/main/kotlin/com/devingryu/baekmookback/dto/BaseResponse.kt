@@ -1,13 +1,13 @@
 package com.devingryu.baekmookback.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.springframework.http.HttpStatus
 
 data class BaseResponse(
     val message: String,
     @JsonProperty("message_translated")
     val messageTranslated: String,
-    val clazz: String
+    @JsonProperty("err_clazz")
+    val errClazz: String
 ) {
     companion object {
         fun BaseResponseCode.toResponse(): BaseResponse =

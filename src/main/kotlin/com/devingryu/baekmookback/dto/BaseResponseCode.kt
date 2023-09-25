@@ -15,5 +15,7 @@ enum class BaseResponseCode(val status: HttpStatus, val message: String, val mes
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "File not found", "요청하신 파일을 찾을 수 없습니다.", "file_not_found_exception"),
     ACCESS_DENIED(HttpStatus.UNAUTHORIZED, "Access Denied", "접근 권한이 없습니다.", "access_denied_exception"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", "서버 내부 오류", "internal_server_error"),
+
+    LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "Could not find lecture.", "강의를 찾을 수 없습니다.", "lecture_not_found_exception"),
     OK(HttpStatus.OK, "Request success", "요청 성공", "")
 }

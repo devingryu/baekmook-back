@@ -3,11 +3,11 @@ POST http://localhost:30700/api/register
 Content-Type: application/json
 
 {
-  "id": 2021320030,
-  "email": "bb",
-  "password": "bb",
-  "name": "name2",
-  "isLecturer": false
+  "id": 2021320029,
+  "email": "aa",
+  "password": "aa",
+  "name": "name1",
+  "isLecturer": true
 }
 
 ###
@@ -15,8 +15,8 @@ POST http://localhost:30700/api/login
 Content-Type: application/json
 
 {
-  "email": "bb",
-  "password": "bb"
+  "email": "aa",
+  "password": "aa"
 }
 
 ###
@@ -37,4 +37,33 @@ Content-Type: application/json
 
 ###
 GET http://localhost:30700/api/me
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDMwIiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTM2NTY5OCwiZXhwIjoxNjk1MzY3NDk4fQ.CFXfrDhYLq887RHTgw1WSxgccTNeuLiUUAGmRPrM64mIQKyNnEfEXA9vNjiQcT5PjXc5p0Rfp6aCQMjFT5WfYQ
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDI5IiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTYyNzQzMCwiZXhwIjoxNjk1NjI5MjMwfQ.-7nelDUw1MSpeT8uQyPEB2clSeyuj3GyVBQjp5T6vHwK99_TdgXINqcYNOrJYkuhS5aeysR1XzYnPrlmeEOAfw
+
+###
+POST http://localhost:30700/api/v1/lecture/create
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDI5IiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTYyOTMyMiwiZXhwIjoxNjk1NjMxMTIyfQ.MSRDWPStr7NtAwf6DnpGpvhVE8dvNHBWJRR_GuZlmLEkvVenmgYECbSTuyTZrEFwxK0udHjo6lPsMnRXMmMDuw
+Content-Type: application/json
+
+{
+  "name": "lectureName",
+  "description": "lectureDescription"
+}
+
+###
+GET http://localhost:30700/api/v1/lecture/1
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDI5IiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTYyOTMyMiwiZXhwIjoxNjk1NjMxMTIyfQ.MSRDWPStr7NtAwf6DnpGpvhVE8dvNHBWJRR_GuZlmLEkvVenmgYECbSTuyTZrEFwxK0udHjo6lPsMnRXMmMDuw
+
+###
+POST http://localhost:30700/api/v1/lecture/write-post
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDI5IiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTYyOTMyMiwiZXhwIjoxNjk1NjMxMTIyfQ.MSRDWPStr7NtAwf6DnpGpvhVE8dvNHBWJRR_GuZlmLEkvVenmgYECbSTuyTZrEFwxK0udHjo6lPsMnRXMmMDuw
+Content-Type: application/json
+
+{
+  "lecture_id": "1",
+  "title": "title",
+  "content": "content"
+}
+
+###
+GET http://localhost:30700/api/v1/lecture/1/posts
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDI5IiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTYyOTMyMiwiZXhwIjoxNjk1NjMxMTIyfQ.MSRDWPStr7NtAwf6DnpGpvhVE8dvNHBWJRR_GuZlmLEkvVenmgYECbSTuyTZrEFwxK0udHjo6lPsMnRXMmMDuw

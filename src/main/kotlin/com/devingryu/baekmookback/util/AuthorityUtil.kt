@@ -22,7 +22,7 @@ object AuthorityUtil {
         else
             forEach {
                 with(it.authority) {
-                    if (this == target || this == MASTER_ROLE) return true
+                    if (this == target || this == ROLE_MASTER) return true
                 }
             }
         return false
@@ -30,5 +30,8 @@ object AuthorityUtil {
 
     const val PRIV_POSTFIX = "PRIVILEGE"
     const val ROLE_PREFIX = "ROLE"
-    const val MASTER_ROLE = "ROLE_MASTER"
+    const val ROLE_MASTER = "${ROLE_PREFIX}_MASTER"
+
+    const val ROLE_LECTURER = "${ROLE_PREFIX}_LECTURER"
+    const val ROLE_STUDENT = "${ROLE_PREFIX}_STUDENT"
 }

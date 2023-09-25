@@ -32,7 +32,7 @@ class AuthorityEvaluator : PermissionEvaluator {
     private fun hasPrivilege(auth: Authentication, targetType: String, permission: String): Boolean {
         val authString = AuthorityUtil.getAuthorityString(targetType, permission)
         auth.authorities.forEach { grantedAuth ->
-            if (grantedAuth.authority == authString || grantedAuth.authority == AuthorityUtil.MASTER_ROLE) {
+            if (grantedAuth.authority == authString || grantedAuth.authority == AuthorityUtil.ROLE_MASTER) {
                 return true
             }
         }

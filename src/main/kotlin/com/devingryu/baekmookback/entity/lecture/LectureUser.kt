@@ -12,16 +12,16 @@ import java.io.Serializable
 
 @Entity
 @IdClass(LectureUserId::class)
-class LectureUser {
+class LectureUser (
     @Id
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    val user: User? = null
+    @JoinColumn(name = "user_id", nullable = false)
+    val user: User,
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "lecture_id")
-    val lecture: Lecture? = null
-}
+    @JoinColumn(name = "lecture_id", nullable = false)
+    val lecture: Lecture
+)
 
-class LectureUserId(private val lecture: Long, private val user: Long): Serializable
+class LectureUserId(private val lecture: Long = -1, private val user: Long = -1): Serializable

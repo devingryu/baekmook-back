@@ -1,6 +1,7 @@
 package com.devingryu.baekmookback.entity
 
 import com.devingryu.baekmookback.entity.lecture.LectureUser
+import com.devingryu.baekmookback.entity.lecture.Post
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.springframework.security.core.GrantedAuthority
@@ -27,10 +28,14 @@ class User(
     private val enabled: Boolean = true
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE])
-    val authorities: Set<UserAuthority> = hashSetOf()
+    private val authorities: Set<UserAuthority> = hashSetOf()
 
-    @OneToMany(mappedBy = "user")
-    val lectures: Set<LectureUser> = hashSetOf()
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val lectures: List<LectureUser> = listOf()
+
+    @OneToMany(mappedBy = "registerer", fetch = FetchType.LAZY)
+    val posts: List<Post> = listOf()
+
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val out = ArrayList<GrantedAuthority>()
         authorities.forEach {
@@ -53,6 +58,9 @@ class User(
     override fun isCredentialsNonExpired(): Boolean = true
 
     override fun isEnabled(): Boolean = enabled
+
+    override fun equals(other: Any?): Boolean
+        = other is User && other.id == id
 }
 
 @Entity

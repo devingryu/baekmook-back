@@ -8,7 +8,7 @@ import com.devingryu.baekmookback.dto.request.LoginRequestDto
 import com.devingryu.baekmookback.dto.request.RegisterRequestDto
 import com.devingryu.baekmookback.dto.request.UserUpdateInfoRequestDto
 import com.devingryu.baekmookback.dto.response.LoginResponseDto
-import com.devingryu.baekmookback.dto.response.MeResponseDto
+import com.devingryu.baekmookback.dto.response.UserResponseDto
 import com.devingryu.baekmookback.entity.User
 import com.devingryu.baekmookback.security.JwtTokenProvider
 import com.devingryu.baekmookback.service.AuthorityService
@@ -49,7 +49,7 @@ class UserController(
         val tokens = userService.login(found.id)
         val body = LoginResponseDto(
             token = tokens.accessToken,
-            me = MeResponseDto.fromUser(found)
+            me = UserResponseDto.of(found, true)
         )
 
         return ResponseEntity.ok()
@@ -63,7 +63,7 @@ class UserController(
         val res = userService.refresh(refreshToken)
         val body = LoginResponseDto(
             token = res.second.accessToken,
-            me = MeResponseDto.fromUser(res.first)
+            me = UserResponseDto.of(res.first, true)
         )
 
         return ResponseEntity.ok()
@@ -84,7 +84,7 @@ class UserController(
     fun updateMemberInfo(
         @RequestBody req: UserUpdateInfoRequestDto,
         @AuthenticationPrincipal user: User
-    ): ResponseEntity<MeResponseDto> {
+    ): ResponseEntity<UserResponseDto> {
         if (!passwordEncoder.matches(req.currentPassword, user.password))
             throw BaseException(BaseResponseCode.INVALID_PASSWORD)
         if (req.newPassword != null)
@@ -92,10 +92,10 @@ class UserController(
         val newUser = userService.update(user.username, req)
 
         return ResponseEntity.ok()
-            .body(MeResponseDto.fromUser(newUser))
+            .body(UserResponseDto.of(newUser, true))
     }
 
     @GetMapping("/api/me")
-    fun getMe(@AuthenticationPrincipal user: User): ResponseEntity<MeResponseDto> =
-        ResponseEntity.ok(MeResponseDto.fromUser(user))
+    fun getMe(@AuthenticationPrincipal user: User): ResponseEntity<UserResponseDto> =
+        ResponseEntity.ok(UserResponseDto.of(user, true))
 }
