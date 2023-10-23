@@ -27,11 +27,12 @@ class UserController(
 ) {
     @PostMapping("/api/register")
     fun register(@RequestBody req: RegisterRequestDto): ResponseEntity<BaseResponse> {
+        if (req.email.isEmpty() || req.password.isEmpty() || req.name.isEmpty()) throw BaseException(BaseResponseCode.BAD_REQUEST)
         if (userService.checkUserByEmail(req.email)) throw BaseException(BaseResponseCode.DUPLICATE_EMAIL)
-        if (userService.checkUserById(req.id)) throw BaseException(BaseResponseCode.DUPLICATE_STUDENT_ID)
+        if (userService.checkUserByStudentId(req.studentId)) throw BaseException(BaseResponseCode.DUPLICATE_STUDENT_ID)
 
         val encodedPw = passwordEncoder.encode(req.password)
-        val user = with(req) { User(id, email, encodedPw, name) }
+        val user = with(req) { User(req.studentId, email, encodedPw, name) }
         val created = userService.createUser(user)
         val role = authorityService.getRole(if (req.isLecturer) "LECTURER" else "STUDENT")
         authorityService.addAuthority(created, role)

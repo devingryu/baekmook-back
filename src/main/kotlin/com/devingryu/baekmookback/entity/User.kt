@@ -11,15 +11,19 @@ import java.time.LocalDateTime
 
 @Entity
 class User(
-    @Id
-    val id: Long,
+    @Column(nullable = false, unique = true)
+    var studentId: String,
     @Column(nullable = false, unique = true)
     private var email: String,
     @Column(nullable = false)
     private var password: String,
     @Column(nullable = false)
     var name: String,
-): UserDetails {
+) : UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L
 
     @field:CreationTimestamp
     lateinit var createdDate: LocalDateTime
@@ -27,7 +31,11 @@ class User(
     @Column(nullable = false)
     private val enabled: Boolean = true
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE])
+    @OneToMany(
+        mappedBy = "user",
+        fetch = FetchType.EAGER,
+        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE]
+    )
     private val authorities: Set<UserAuthority> = hashSetOf()
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -47,6 +55,7 @@ class User(
     fun setPassword(value: String) {
         this.password = value
     }
+
     override fun getPassword(): String = password
 
     override fun getUsername(): String = email
@@ -59,8 +68,7 @@ class User(
 
     override fun isEnabled(): Boolean = enabled
 
-    override fun equals(other: Any?): Boolean
-        = other is User && other.id == id
+    override fun equals(other: Any?): Boolean = other is User && other.id == id
 }
 
 @Entity

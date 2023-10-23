@@ -29,6 +29,13 @@ class UserService(private val userRepository: UserRepository, private val jwtTok
     fun checkUserById(id: Long): Boolean
             = userRepository.existsById(id)
 
+    @Throws(BaseException::class)
+    fun findUserByStudentId(id: String): User
+            = userRepository.findByStudentId(id) ?: throw BaseException(BaseResponseCode.USER_NOT_FOUND)
+
+    fun checkUserByStudentId(id: String): Boolean
+            = userRepository.existsByStudentId(id)
+
     fun createUser(user: User): User {
         return userRepository.save(user)
     }

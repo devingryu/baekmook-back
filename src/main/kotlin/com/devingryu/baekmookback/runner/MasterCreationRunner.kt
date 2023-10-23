@@ -44,7 +44,7 @@ class MasterCreationRunner(
         }
         if (!memberRepository.existsByEmail(name)) {
             log.info("Master user $name not created, creating...")
-            val member = User(0, name, passwordEncoder.encode(pw), "master")
+            val member = User("MASTER", name, passwordEncoder.encode(pw), "master")
             memberRepository.save(member)
 
             val memberAuthority = UserAuthority(member, masterRole)

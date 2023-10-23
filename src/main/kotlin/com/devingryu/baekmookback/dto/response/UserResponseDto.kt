@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 class UserResponseDto(
     val id: Long,
+    val studentId: String,
     val email: String,
     val name: String,
     val role: String?,
-    @JsonProperty("created_date")
     val createdDate: Long?
 ) {
     companion object {
@@ -23,9 +23,9 @@ class UserResponseDto(
                 else -> "unknown"
             }
             if (isMe)
-                UserResponseDto(id, username, name, role, createdDate.toTimestamp())
+                UserResponseDto(id, studentId, username, name, role, createdDate.toTimestamp())
             else
-                UserResponseDto(id, username, name, null, null)
+                UserResponseDto(id, studentId, username, name, null, null)
         }
     }
 }
