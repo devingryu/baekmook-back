@@ -11,6 +11,8 @@ import com.devingryu.baekmookback.repository.LectureRepository
 import com.devingryu.baekmookback.repository.LectureUserRepository
 import com.devingryu.baekmookback.util.AuthorityUtil.ROLE_LECTURER
 import com.devingryu.baekmookback.util.AuthorityUtil.hasPermission
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -49,4 +51,8 @@ class LectureService(
     fun getLecture(lectureId: Long): Lecture =
         lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
 
+    fun getLectures(n: Int, page: Int): Page<Lecture> {
+        val pageRequest = PageRequest.of(page, n)
+        return lectureRepository.findAllByOrderByNameAsc(pageRequest)
+    }
 }

@@ -5,8 +5,8 @@ import jakarta.persistence.*
 @Entity
 class Lecture (
     @Column(nullable = false)
-    val name: String,
-    val description: String?,
+    var name: String,
+    var description: String?,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,4 +17,6 @@ class Lecture (
 
     @OneToMany(mappedBy = "lecture", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val users: MutableSet<LectureUser> = hashSetOf()
+
+    var isPublic: Boolean = true
 }
