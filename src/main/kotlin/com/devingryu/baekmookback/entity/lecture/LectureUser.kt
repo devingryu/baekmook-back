@@ -19,7 +19,9 @@ class LectureUser (
     @Id
     @ManyToOne
     @JoinColumn(name = "lecture_id", nullable = false)
-    val lecture: Lecture
+    val lecture: Lecture,
+
+    val isUserLecturer: Boolean,
 )
 
 class LectureUserId(private val lecture: Long = -1, private val user: Long = -1): Serializable

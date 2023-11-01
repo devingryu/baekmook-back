@@ -69,6 +69,19 @@ class User(
     override fun isEnabled(): Boolean = enabled
 
     override fun equals(other: Any?): Boolean = other is User && other.id == id
+    override fun hashCode(): Int {
+        var result = studentId.hashCode()
+        result = 31 * result + email.hashCode()
+        result = 31 * result + password.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + id.hashCode()
+        result = 31 * result + createdDate.hashCode()
+        result = 31 * result + enabled.hashCode()
+        result = 31 * result + authorities.hashCode()
+        result = 31 * result + lectures.hashCode()
+        result = 31 * result + posts.hashCode()
+        return result
+    }
 }
 
 @Entity

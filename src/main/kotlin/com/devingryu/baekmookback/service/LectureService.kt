@@ -26,12 +26,13 @@ class LectureService(
         // Check Permissions
         if (!user.authorities.hasPermission(ROLE_LECTURER)) throw BaseException(BaseResponseCode.ACCESS_DENIED)
 
-        // Create Lecture
-        val newLecture = lectureRepository.save(Lecture(name, description))
-
-        // Add Lecturer
-        val lu = lectureUserRepository.save(LectureUser(user, newLecture))
-        return newLecture.apply { users.add(lu) }
+//        // Create Lecture
+//        val newLecture = lectureRepository.save(Lecture(name, description))
+//
+//        // Add Lecturer
+//        val lu = lectureUserRepository.save(LectureUser(user, newLecture, true))
+//        return newLecture.apply { users.add(lu) }
+        return lectureRepository.save(Lecture(name, description).apply { users.add(LectureUser(user, this, true)) })
     }
 
     /** Check First if requesting user has permission to write post */
@@ -41,7 +42,7 @@ class LectureService(
             lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
 
         // Check Permission
-        if (!(registerer.authorities.hasPermission(ROLE_LECTURER) && lecture.users.any { registerer.id == it.user.id }))
+        if (!(lecture.users.any { registerer.id == it.user.id && it.isUserLecturer }))
             throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
 
         // Create Post

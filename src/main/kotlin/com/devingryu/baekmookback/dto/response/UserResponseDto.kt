@@ -15,17 +15,18 @@ class UserResponseDto(
 ) {
     companion object {
         fun of(user: User, isMe: Boolean) = with(user) {
-            val authorities = user.authorities.map { it.authority }
-            val role = when {
-                AuthorityUtil.ROLE_MASTER in authorities -> "master"
-                AuthorityUtil.ROLE_LECTURER in authorities -> "lecturer"
-                AuthorityUtil.ROLE_STUDENT in authorities -> "student"
-                else -> "unknown"
-            }
-            if (isMe)
+            if (isMe) {
+                val authorities = user.authorities.map { it.authority }
+                val role = when {
+                    AuthorityUtil.ROLE_MASTER in authorities -> "master"
+                    AuthorityUtil.ROLE_LECTURER in authorities -> "lecturer"
+                    AuthorityUtil.ROLE_STUDENT in authorities -> "student"
+                    else -> "unknown"
+                }
                 UserResponseDto(id, studentId, username, name, role, createdDate.toTimestamp())
-            else
+            } else {
                 UserResponseDto(id, studentId, username, name, null, null)
+            }
         }
     }
 }

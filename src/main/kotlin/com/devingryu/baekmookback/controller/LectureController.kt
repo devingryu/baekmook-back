@@ -40,7 +40,7 @@ class LectureController(
         val lectureId = id.toLongOrNull() ?: throw BaseException(BaseResponseCode.BAD_REQUEST)
         val lecture = lectureService.getLecture(lectureId)
         // 자신이 속한 강의가 아닐 경우 존재하지 않는 강의로 표시
-        if (!lecture.lecturers.any { user == it.lecturer } || !lecture.students.any { user == it.student })
+        if (!lecture.users.any { user == it.user })
             throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
         return lecture.posts.map { PostResponseDto.of(it) }
     }
