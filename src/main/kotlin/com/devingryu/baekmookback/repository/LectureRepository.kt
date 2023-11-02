@@ -1,5 +1,6 @@
 package com.devingryu.baekmookback.repository
 
+import com.devingryu.baekmookback.entity.User
 import com.devingryu.baekmookback.entity.lecture.Lecture
 import com.devingryu.baekmookback.entity.lecture.Post
 import com.devingryu.baekmookback.entity.lecture.LectureUser
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface LectureRepository: JpaRepository<Lecture, Long> {
     fun findAllByOrderByNameAsc(pageable: Pageable): Page<Lecture>
+    fun findAllByUsers_UserOrderByNameAsc(pageable: Pageable, user: User): Page<Lecture>
 }
 
 interface postRepository: JpaRepository<Post, Long> {}

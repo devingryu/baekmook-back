@@ -21,8 +21,13 @@ class LectureController(
     private val lectureService: LectureService
 ) {
     @GetMapping("")
-    fun getLectures(@RequestParam(defaultValue = "20") n: Int, @RequestParam(defaultValue = "1") page: Int, @AuthenticationPrincipal user: User): LecturesResponseDto {
-        val lecturePage = lectureService.getLectures(n, page - 1)
+    fun getLectures(
+        @RequestParam(defaultValue = "20") n: Int,
+        @RequestParam(defaultValue = "1") page: Int,
+        @RequestParam(defaultValue = "false") isMine: Boolean,
+        @AuthenticationPrincipal user: User
+    ): LecturesResponseDto {
+        val lecturePage = lectureService.getLectures(n, page - 1, if (isMine) user else null)
         val totalPages = lecturePage.totalPages
         val lectures = lecturePage.content.map { LectureResponseDto.of(it, user) }
         return LecturesResponseDto(totalPages, lectures)
@@ -46,7 +51,10 @@ class LectureController(
     }
 
     @PostMapping("/create")
-    fun createLecture(@RequestBody req: CreateLectureRequestDto, @AuthenticationPrincipal user: User): LectureResponseDto {
+    fun createLecture(
+        @RequestBody req: CreateLectureRequestDto,
+        @AuthenticationPrincipal user: User
+    ): LectureResponseDto {
         val lecture = lectureService.createLecture(req.name, req.description, user)
         return LectureResponseDto.of(lecture, true, true)
     }

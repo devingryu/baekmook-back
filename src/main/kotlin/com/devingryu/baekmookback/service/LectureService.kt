@@ -46,8 +46,9 @@ class LectureService(
     fun getLecture(lectureId: Long): Lecture =
         lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
 
-    fun getLectures(n: Int, page: Int): Page<Lecture> {
+    fun getLectures(n: Int, page: Int, user: User?): Page<Lecture> {
         val pageRequest = PageRequest.of(page, n)
-        return lectureRepository.findAllByOrderByNameAsc(pageRequest)
+        return if (user != null) lectureRepository.findAllByUsers_UserOrderByNameAsc(pageRequest, user)
+        else lectureRepository.findAllByOrderByNameAsc(pageRequest)
     }
 }
