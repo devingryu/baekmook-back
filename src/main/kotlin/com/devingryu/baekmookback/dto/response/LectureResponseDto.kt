@@ -9,8 +9,8 @@ data class LectureResponseDto(
     val id: Long,
     val name: String,
     val description: String?,
-    val isInvolved: Boolean,
-    val isLecturer: Boolean,
+    val isInvolved: Boolean?,
+    val isLecturer: Boolean?,
     val lecturers: List<UserResponseDto>,
     val students: List<UserResponseDto>?,
 ) {

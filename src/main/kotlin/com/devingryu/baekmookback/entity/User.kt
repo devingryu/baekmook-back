@@ -41,9 +41,6 @@ class User(
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val lectures: List<LectureUser> = listOf()
 
-    @OneToMany(mappedBy = "registerer", fetch = FetchType.LAZY)
-    val posts: List<Post> = listOf()
-
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val out = ArrayList<GrantedAuthority>()
         authorities.forEach {
@@ -79,7 +76,6 @@ class User(
         result = 31 * result + enabled.hashCode()
         result = 31 * result + authorities.hashCode()
         result = 31 * result + lectures.hashCode()
-        result = 31 * result + posts.hashCode()
         return result
     }
 }
