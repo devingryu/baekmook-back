@@ -39,6 +39,8 @@ class LectureService(
         if (!(lecture.users.any { registerer.id == it.user.id && it.isUserLecturer }))
             throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
 
+        if(title.isBlank() || content.isBlank()) throw BaseException(BaseResponseCode.BAD_REQUEST)
+
         // Create Post
         return postRepository.save(Post(title.trim(), content.trim(), registerer, lecture))
     }

@@ -2,13 +2,15 @@ package com.devingryu.baekmookback.entity.lecture
 
 import com.devingryu.baekmookback.entity.User
 import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 
 @Entity
 class Post(
     @Column(nullable = false)
     val title: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     val content: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,4 +24,7 @@ class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = -1
+
+    @field:CreationTimestamp
+    lateinit var createdDate: LocalDateTime
 }
