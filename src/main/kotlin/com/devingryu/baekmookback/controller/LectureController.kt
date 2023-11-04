@@ -1,16 +1,17 @@
 package com.devingryu.baekmookback.controller
 
 import com.devingryu.baekmookback.dto.BaseException
+import com.devingryu.baekmookback.dto.BaseResponse
+import com.devingryu.baekmookback.dto.BaseResponse.Companion.toResponse
 import com.devingryu.baekmookback.dto.BaseResponseCode
 import com.devingryu.baekmookback.dto.request.CreateLectureRequestDto
 import com.devingryu.baekmookback.dto.request.CreatePostRequestDto
+import com.devingryu.baekmookback.dto.request.JoinLectureRequestDto
 import com.devingryu.baekmookback.dto.response.LectureResponseDto
 import com.devingryu.baekmookback.dto.response.LecturesResponseDto
 import com.devingryu.baekmookback.dto.response.PostResponseDto
 import com.devingryu.baekmookback.entity.User
 import com.devingryu.baekmookback.service.LectureService
-import com.devingryu.baekmookback.util.AuthorityUtil.ROLE_LECTURER
-import com.devingryu.baekmookback.util.AuthorityUtil.hasPermission
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -63,5 +64,11 @@ class LectureController(
     fun createPost(@RequestBody req: CreatePostRequestDto, @AuthenticationPrincipal user: User): PostResponseDto {
         val post = lectureService.createPost(req.lectureId, req.title, req.content, user)
         return PostResponseDto.of(post)
+    }
+
+    @PostMapping("/join")
+    fun joinLecture(@RequestBody req: JoinLectureRequestDto, @AuthenticationPrincipal user: User): BaseResponse {
+        lectureService.enrollStudent(req.lectureId, user)
+        return BaseResponseCode.OK.toResponse()
     }
 }

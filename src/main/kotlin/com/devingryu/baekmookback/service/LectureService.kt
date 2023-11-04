@@ -10,6 +10,7 @@ import com.devingryu.baekmookback.repository.postRepository
 import com.devingryu.baekmookback.repository.LectureRepository
 import com.devingryu.baekmookback.repository.LectureUserRepository
 import com.devingryu.baekmookback.util.AuthorityUtil.ROLE_LECTURER
+import com.devingryu.baekmookback.util.AuthorityUtil.ROLE_STUDENT
 import com.devingryu.baekmookback.util.AuthorityUtil.hasPermission
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -48,9 +49,17 @@ class LectureService(
     fun getLecture(lectureId: Long): Lecture =
         lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
 
+    // User를 넘겨주면 해당 유저가 속해있는 것만 검색함
     fun getLectures(n: Int, page: Int, user: User?): Page<Lecture> {
         val pageRequest = PageRequest.of(page, n)
         return if (user != null) lectureRepository.findAllByUsers_UserOrderByNameAsc(pageRequest, user)
         else lectureRepository.findAllByOrderByNameAsc(pageRequest)
+    }
+
+    fun enrollStudent(lectureId: Long, user: User): LectureUser {
+        val lecture = lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
+        if (!user.authorities.hasPermission(ROLE_STUDENT)) throw BaseException(BaseResponseCode.ENROLL_STUDENT_ONLY)
+
+        return lectureUserRepository.save(LectureUser(user, lecture, false))
     }
 }
