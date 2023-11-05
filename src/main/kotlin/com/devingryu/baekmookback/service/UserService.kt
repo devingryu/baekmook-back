@@ -42,7 +42,7 @@ class UserService(private val userRepository: UserRepository, private val jwtTok
 
 
     fun login(userPk: Long): TokenInfo
-    = jwtTokenProvider.createAllToken(userPk.toString())
+    = jwtTokenProvider.createAccessToken(userPk.toString())
 
     fun logout(): String
     = jwtTokenProvider.createInvalidationCookie()
@@ -51,7 +51,7 @@ class UserService(private val userRepository: UserRepository, private val jwtTok
         if (!jwtTokenProvider.validateToken(token)) throw BaseException(BaseResponseCode.REFRESH_TOKEN_INVALID)
         val userPk = jwtTokenProvider.getUserPkFromRefreshToken(token)
             ?: throw BaseException(BaseResponseCode.REFRESH_TOKEN_INVALID)
-        val tokens = jwtTokenProvider.createAllToken(userPk)
+        val tokens = jwtTokenProvider.createAccessToken(userPk)
         val user = try {
             userRepository.findById(userPk.toLong()).orElseThrow()
         } catch (e: Exception) {

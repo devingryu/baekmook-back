@@ -1,8 +1,6 @@
 package com.devingryu.baekmookback.security
 
 import com.devingryu.baekmookback.common.TokenInfo
-import com.devingryu.baekmookback.dto.BaseException
-import com.devingryu.baekmookback.dto.BaseResponseCode
 import com.devingryu.baekmookback.service.UserDetailsService
 import com.devingryu.baekmookback.util.Extensions.toDate
 import io.jsonwebtoken.Jwts
@@ -40,17 +38,12 @@ class JwtTokenProvider(
         secretKey = Keys.hmacShaKeyFor(rawKey)
     }
 
-    fun createAllToken(userPk: String): TokenInfo {
+    fun createAccessToken(userPk: String): TokenInfo {
         val accessToken = createToken(userPk, accessTokenValidTime, TOKEN_TYPE_ACCESS)
-        val refreshToken = createToken(userPk, refreshTokenValidTime, TOKEN_TYPE_REFRESH)
-        val refreshCookie = createRefreshCookie(refreshToken.first)
 
         return TokenInfo(
             accessToken = accessToken.first,
             accessExpiryDate = accessToken.second,
-            refreshToken = refreshToken.first,
-            refreshExpiryDate = refreshToken.second,
-            refreshTokenCookie = refreshCookie
         )
     }
 

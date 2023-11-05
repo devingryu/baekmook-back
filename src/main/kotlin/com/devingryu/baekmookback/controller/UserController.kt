@@ -41,35 +41,18 @@ class UserController(
     }
 
     @PostMapping("/api/login")
-    fun login(@RequestBody req: LoginRequestDto): ResponseEntity<LoginResponseDto> {
+    fun login(@RequestBody req: LoginRequestDto): LoginResponseDto {
         val found = userService.findUserByEmail(req.email)
 
         if (!passwordEncoder.matches(req.password, found.password))
             throw BaseException(BaseResponseCode.INVALID_PASSWORD)
 
-        val tokens = userService.login(found.id)
-        val body = LoginResponseDto(
-            token = tokens.accessToken,
+        val token = userService.login(found.id)
+
+        return LoginResponseDto(
+            token = token.accessToken,
             me = UserResponseDto.of(found, true)
         )
-
-        return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, tokens.refreshTokenCookie)
-            .body(body)
-    }
-
-    @PostMapping("/api/refresh")
-    fun refresh(@CookieValue(JwtTokenProvider.REFRESH_COOKIE_NAME) refreshToken: String?): ResponseEntity<LoginResponseDto> {
-        if (refreshToken == null) throw BaseException(BaseResponseCode.REFRESH_TOKEN_INVALID)
-        val res = userService.refresh(refreshToken)
-        val body = LoginResponseDto(
-            token = res.second.accessToken,
-            me = UserResponseDto.of(res.first, true)
-        )
-
-        return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, res.second.refreshTokenCookie)
-            .body(body)
     }
 
     @PostMapping("/api/logout")
