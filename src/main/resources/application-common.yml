@@ -2,8 +2,8 @@ spring:
   datasource:
     url: jdbc:mysql://${MYSQL_URL}/${MYSQL_DATABASE}?characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: {MYSQL_USER}
-    password: {MYSQL_PASSWORD}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
