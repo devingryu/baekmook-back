@@ -26,8 +26,6 @@ class JwtTokenProvider(
     private val b64Key: String,
     @Value("\${baekmook.jwt.access-time-ms}")
     private val accessTokenValidTime: Long,
-    @Value("\${baekmook.jwt.refresh-time-ms}")
-    private val refreshTokenValidTime: Long,
 ) {
 
     private var secretKey: SecretKey? = null
@@ -61,15 +59,6 @@ class JwtTokenProvider(
             .compact()
 
         return Pair(token, expiration.time)
-    }
-
-    private fun createRefreshCookie(refreshToken: String): String {
-        return ResponseCookie.from(REFRESH_COOKIE_NAME, refreshToken)
-            .httpOnly(true)
-//            .secure(true)
-            .path("/")
-            .maxAge(refreshTokenValidTime / 1000L)
-            .build().toString()
     }
 
     fun createInvalidationCookie(): String {
