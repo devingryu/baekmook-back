@@ -11,6 +11,7 @@ class UserResponseDto(
     val email: String,
     val name: String,
     val role: String?,
+    val roleTranslated: String?,
     val createdDate: Long?
 ) {
     companion object {
@@ -18,14 +19,14 @@ class UserResponseDto(
             if (isMe) {
                 val authorities = user.authorities.map { it.authority }
                 val role = when {
-                    AuthorityUtil.ROLE_MASTER in authorities -> "master"
-                    AuthorityUtil.ROLE_LECTURER in authorities -> "lecturer"
-                    AuthorityUtil.ROLE_STUDENT in authorities -> "student"
-                    else -> "unknown"
+                    AuthorityUtil.ROLE_MASTER in authorities -> "master" to "관리자"
+                    AuthorityUtil.ROLE_LECTURER in authorities -> "lecturer" to "교수자"
+                    AuthorityUtil.ROLE_STUDENT in authorities -> "student" to "학생"
+                    else -> "unknown" to "알 수 없음"
                 }
-                UserResponseDto(id, studentId, username, name, role, createdDate.toTimestamp())
+                UserResponseDto(id, studentId, username, name, role.first, role.second, createdDate.toTimestamp())
             } else {
-                UserResponseDto(id, studentId, username, name, null, null)
+                UserResponseDto(id, studentId, username, name, null, null, null)
             }
         }
     }

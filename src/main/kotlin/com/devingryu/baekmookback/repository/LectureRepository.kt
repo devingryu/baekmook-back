@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface LectureRepository: JpaRepository<Lecture, Long> {
     fun findAllByOrderByNameAsc(pageable: Pageable): Page<Lecture>
     fun findAllByUsers_UserOrderByNameAsc(pageable: Pageable, user: User): Page<Lecture>
+    fun findAllByUsers_UserNotOrderByNameAsc(pageable: Pageable, user: User): Page<Lecture>
 }
 
 interface postRepository: JpaRepository<Post, Long> {}

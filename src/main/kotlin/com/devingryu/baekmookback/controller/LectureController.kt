@@ -28,7 +28,7 @@ class LectureController(
         @RequestParam(defaultValue = "false") isMine: Boolean,
         @AuthenticationPrincipal user: User
     ): LecturesResponseDto {
-        val lecturePage = lectureService.getLectures(n, page - 1, if (isMine) user else null)
+        val lecturePage = lectureService.getLectures(n, page - 1, user, isMine)
         val totalPages = lecturePage.totalPages
         val lectures = lecturePage.content.map { LectureResponseDto.of(it, user) }
         return LecturesResponseDto(totalPages, lectures)

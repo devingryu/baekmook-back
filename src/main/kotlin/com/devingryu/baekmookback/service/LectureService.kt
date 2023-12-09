@@ -50,10 +50,10 @@ class LectureService(
         lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
 
     // User를 넘겨주면 해당 유저가 속해있는 것만 검색함
-    fun getLectures(n: Int, page: Int, user: User?): Page<Lecture> {
+    fun getLectures(n: Int, page: Int, user: User, maskUser: Boolean): Page<Lecture> {
         val pageRequest = PageRequest.of(page, n)
-        return if (user != null) lectureRepository.findAllByUsers_UserOrderByNameAsc(pageRequest, user)
-        else lectureRepository.findAllByOrderByNameAsc(pageRequest)
+        return if (maskUser) lectureRepository.findAllByUsers_UserOrderByNameAsc(pageRequest, user)
+        else lectureRepository.findAllByUsers_UserNotOrderByNameAsc(pageRequest, user)
     }
 
     fun enrollStudent(lectureId: Long, user: User): LectureUser {
