@@ -26,8 +26,12 @@ class LectureService(
     fun createLecture(name: String, description: String?, user: User): Lecture {
         // Check Permissions
         if (!user.authorities.hasPermission(ROLE_LECTURER)) throw BaseException(BaseResponseCode.ACCESS_DENIED)
-        
-        return lectureRepository.save(Lecture(name, description).apply { users.add(LectureUser(user, this, true)) })
+
+        return lectureRepository.save(Lecture(name.trim().take(255), description?.trim()?.take(255)).apply {
+            users.add(
+                LectureUser(user, this, true)
+            )
+        })
     }
 
     /** Check First if requesting user has permission to write post */
@@ -40,10 +44,10 @@ class LectureService(
         if (!(lecture.users.any { registerer.id == it.user.id && it.isUserLecturer }))
             throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
 
-        if(title.isBlank() || content.isBlank()) throw BaseException(BaseResponseCode.BAD_REQUEST)
+        if (title.isBlank() || content.isBlank()) throw BaseException(BaseResponseCode.BAD_REQUEST)
 
         // Create Post
-        return postRepository.save(Post(title.trim(), content.trim(), registerer, lecture))
+        return postRepository.save(Post(title.trim().take(255), content.trim(), registerer, lecture))
     }
 
     fun getLecture(lectureId: Long): Lecture =
@@ -57,7 +61,8 @@ class LectureService(
     }
 
     fun enrollStudent(lectureId: Long, user: User): LectureUser {
-        val lecture = lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
+        val lecture =
+            lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
         if (!user.authorities.hasPermission(ROLE_STUDENT)) throw BaseException(BaseResponseCode.ENROLL_STUDENT_ONLY)
 
         return lectureUserRepository.save(LectureUser(user, lecture, false))
