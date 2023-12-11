@@ -58,7 +58,7 @@ class LectureController(
         @AuthenticationPrincipal user: User
     ): List<PostResponseDto> {
         val posts = lectureService.getRecentPosts(n, page - 1, user).content
-        return posts.map { PostResponseDto.of(it) }
+        return posts.map { PostResponseDto.of(it, true) }
     }
 
     @PostMapping("/create")
