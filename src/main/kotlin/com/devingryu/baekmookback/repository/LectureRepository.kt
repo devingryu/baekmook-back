@@ -13,8 +13,11 @@ interface LectureRepository: JpaRepository<Lecture, Long> {
     fun findAllByOrderByNameAsc(pageable: Pageable): Page<Lecture>
     fun findAllByUsers_UserOrderByNameAsc(pageable: Pageable, user: User): Page<Lecture>
     fun findAllByUsers_UserNotOrderByNameAsc(pageable: Pageable, user: User): Page<Lecture>
+
 }
 
-interface postRepository: JpaRepository<Post, Long> {}
+interface PostRepository: JpaRepository<Post, Long> {
+    fun findAllByLecture_Users_UserOrderByCreatedDateDesc(pageable: Pageable, user: User): Page<Post>
+}
 
 interface LectureUserRepository: JpaRepository<LectureUser, LectureUserId> {}

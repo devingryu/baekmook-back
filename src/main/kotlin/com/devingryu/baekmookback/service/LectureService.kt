@@ -6,7 +6,7 @@ import com.devingryu.baekmookback.entity.User
 import com.devingryu.baekmookback.entity.lecture.Lecture
 import com.devingryu.baekmookback.entity.lecture.Post
 import com.devingryu.baekmookback.entity.lecture.LectureUser
-import com.devingryu.baekmookback.repository.postRepository
+import com.devingryu.baekmookback.repository.PostRepository
 import com.devingryu.baekmookback.repository.LectureRepository
 import com.devingryu.baekmookback.repository.LectureUserRepository
 import com.devingryu.baekmookback.util.AuthorityUtil.ROLE_LECTURER
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service
 @Service
 class LectureService(
     private val lectureRepository: LectureRepository,
-    private val postRepository: postRepository,
+    private val postRepository: PostRepository,
     private val lectureUserRepository: LectureUserRepository,
 ) {
     fun createLecture(name: String, description: String?, user: User): Lecture {
@@ -49,6 +49,12 @@ class LectureService(
         // Create Post
         return postRepository.save(Post(title.trim().take(255), content.trim(), registerer, lecture))
     }
+
+    fun getRecentPosts(n: Int, page: Int, user: User): Page<Post> {
+        val pageRequest = PageRequest.of(page, n)
+        return postRepository.findAllByLecture_Users_UserOrderByCreatedDateDesc(pageRequest, user)
+    }
+
 
     fun getLecture(lectureId: Long): Lecture =
         lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)

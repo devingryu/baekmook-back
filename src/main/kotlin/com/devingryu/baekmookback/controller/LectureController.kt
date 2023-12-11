@@ -51,13 +51,23 @@ class LectureController(
         return lecture.posts.map { PostResponseDto.of(it) }
     }
 
+    @GetMapping("/recent-posts")
+    fun getRecentPosts(
+        @RequestParam(defaultValue = "20") n: Int,
+        @RequestParam(defaultValue = "1") page: Int,
+        @AuthenticationPrincipal user: User
+    ): List<PostResponseDto> {
+        val posts = lectureService.getRecentPosts(n, page - 1, user).content
+        return posts.map { PostResponseDto.of(it) }
+    }
+
     @PostMapping("/create")
     fun createLecture(
         @RequestBody req: CreateLectureRequestDto,
         @AuthenticationPrincipal user: User
     ): LectureResponseDto {
         val lecture = lectureService.createLecture(req.name, req.description, user)
-        return LectureResponseDto.of(lecture, true, true)
+        return LectureResponseDto.of(lecture, isInvolved = true, isLecturer = true)
     }
 
     @PostMapping("/write-post")
