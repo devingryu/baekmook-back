@@ -1,0 +1,393 @@
+openapi: "3.0.3"
+info:
+  title: "Baekmook_Back API"
+  description: "Baekmook_Back API"
+  version: "0.0.3"
+
+paths:
+  /api/register:
+    post:
+      summary: "회원가입"
+      description:
+        교수자로 가입하기 위해서는 isLecturer=true로, 학생으로 가입하기 위해서는 isLecturer=false로 설정합니다.
+      operationId: "register"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+  /api/login:
+    post:
+      summary: "로그인"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginResponseDto"
+  /api/update-user:
+    patch:
+      summary: "회원정보 수정"
+      description: 웹 서비스에서는 구현하지 않아 사용이 불가합니다.
+      operationId: "updateMemberInfo"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateInfoRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponseDto"
+  /api/me:
+    get:
+      summary: "내 정보 가져오기"
+      operationId: "getMe"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponseDto"
+  /api/v1/lecture:
+    get:
+      summary: "강의 리스트 가져오기"
+      description: n으로 한번에 가져올 갯수 지정<br />isMine=true로 내가 속한 강의만 가져오기<br />요청하는 본인이 교수자가 아니라면 학생 리스트는 가져오지 않습니다.
+      operationId: "getLectures"
+      parameters:
+        - name: "n"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "20"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "1"
+        - name: "isMine"
+          in: "query"
+          required: false
+          schema:
+            type: "boolean"
+            default: "false"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LecturesResponseDto"
+  /api/v1/lecture/{id}:
+    get:
+      summary: "단일 강의 정보 불러오기"
+      description: "요청하는 본인이 교수자가 아니라면 학생 리스트는 가져오지 않습니다."
+      operationId: "getLecture"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LectureResponseDto"
+  /api/v1/lecture/{id}/posts:
+    get:
+      summary: "단일 강의 게시글 불러오기"
+      description: "강의 정보는 항상 null을 리턴합니다."
+      operationId: "getPosts"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PostResponseDto"
+  /api/v1/lecture/recent-posts:
+    get:
+      summary: "최근 게시물 불러오기(타임라인)"
+      description: "본인이 속한 강의의 최신 게시물을 불러옵니다.<br />n으로 한 번에 불러올 갯수 지정"
+      operationId: "getRecentPosts"
+      parameters:
+        - name: "n"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "20"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "1"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PostResponseDto"
+  /api/v1/lecture/create:
+    post:
+      summary: "강의 생성"
+      description: "description은 nullable입니다."
+      operationId: "createLecture"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLectureRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LectureResponseDto"
+  /api/v1/lecture/write-post:
+    post:
+      summary: "게시글 작성"
+      description: "해당 강의의 교수자가 아니라면 사용할 수 없습니다."
+      operationId: "createPost"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PostResponseDto"
+  /api/v1/lecture/join:
+    post:
+      summary: "수강 신청"
+      description: "교수자는 수강신청할 수 없습니다."
+      operationId: "joinLecture"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JoinLectureRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+  /api/v1/lecture/withdraw:
+    post:
+      summary: "제적"
+      description: "해당 강의의 교수자가 아니라면 사용할 수 없습니다."
+      operationId: "withdrawLecture"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WithdrawLectureRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+components:
+  schemas:
+    UserResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        studentId:
+          type: "string"
+        email:
+          type: "string"
+        name:
+          type: "string"
+        role:
+          type: "string"
+        roleTranslated:
+          type: "string"
+        createdDate:
+          type: "integer"
+          format: "int64"
+    LectureResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        description:
+          type: "string"
+        involved:
+          type: "boolean"
+        lecturer:
+          type: "boolean"
+        lecturers:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UserResponseDto"
+        students:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UserResponseDto"
+    LecturesResponseDto:
+      type: "object"
+      properties:
+        totalPages:
+          type: "integer"
+          format: "int32"
+        lectures:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/LectureResponseDto"
+    PostResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        content:
+          type: "string"
+        creationTime:
+          type: "integer"
+          format: "int64"
+        creationTimeFormatted:
+          type: "string"
+        registerer:
+          $ref: "#/components/schemas/UserResponseDto"
+        lecture:
+          $ref: "#/components/schemas/LectureResponseDto"
+    CreateLectureRequestDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+    CreatePostRequestDto:
+      type: "object"
+      properties:
+        lectureId:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        content:
+          type: "string"
+    JoinLectureRequestDto:
+      type: "object"
+      properties:
+        lectureId:
+          type: "integer"
+          format: "int64"
+    BaseResponse:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+        messageTranslated:
+          type: "string"
+        errClazz:
+          type: "string"
+    WithdrawLectureRequestDto:
+      type: "object"
+      properties:
+        lectureId:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "integer"
+          format: "int64"
+    RegisterRequestDto:
+      type: "object"
+      properties:
+        studentId:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        name:
+          type: "string"
+        isLecturer:
+          type: "boolean"
+    LoginRequestDto:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+    LoginResponseDto:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+        me:
+          $ref: "#/components/schemas/UserResponseDto"
+    UserUpdateInfoRequestDto:
+      type: "object"
+      properties:
+        currentPassword:
+          type: "string"
+        newName:
+          type: "string"
+        newPassword:
+          type: "string"

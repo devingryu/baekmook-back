@@ -50,16 +50,20 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:30700/api/v1/lecture
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5ODg2MDc1NCwiZXhwIjoxNjk4ODYyNTU0fQ.UIgC8-X4V7mMIKbdCB-iTjcpJU8eJQVoaFetGmesNd991F4TNDgpbTdLxKzmzZX3CINF10h7GMzm2E-RYPVQ1A
+
+###
 GET http://localhost:30700/api/v1/lecture/1
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDI5IiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTYyOTMyMiwiZXhwIjoxNjk1NjMxMTIyfQ.MSRDWPStr7NtAwf6DnpGpvhVE8dvNHBWJRR_GuZlmLEkvVenmgYECbSTuyTZrEFwxK0udHjo6lPsMnRXMmMDuw
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5ODg2MDc1NCwiZXhwIjoxNjk4ODYyNTU0fQ.UIgC8-X4V7mMIKbdCB-iTjcpJU8eJQVoaFetGmesNd991F4TNDgpbTdLxKzmzZX3CINF10h7GMzm2E-RYPVQ1A
 
 ###
 POST http://localhost:30700/api/v1/lecture/write-post
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDI5IiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTYyOTMyMiwiZXhwIjoxNjk1NjMxMTIyfQ.MSRDWPStr7NtAwf6DnpGpvhVE8dvNHBWJRR_GuZlmLEkvVenmgYECbSTuyTZrEFwxK0udHjo6lPsMnRXMmMDuw
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5ODEzNDIzMiwiZXhwIjoxNjk4MTM2MDMyfQ.kkOztWDzSK37EcyeRZRJwT9PxAe3y-lsBq9AF_OEFIPIsJIGDGvubYGRpXWBSkwXaM96-ptgTG5i5yb3k5HpFw
 Content-Type: application/json
 
 {
-  "lecture_id": "1",
+  "lectureId": 1,
   "title": "title",
   "content": "content"
 }
@@ -67,3 +71,27 @@ Content-Type: application/json
 ###
 GET http://localhost:30700/api/v1/lecture/1/posts
 Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDIxMzIwMDI5IiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5NTYyOTMyMiwiZXhwIjoxNjk1NjMxMTIyfQ.MSRDWPStr7NtAwf6DnpGpvhVE8dvNHBWJRR_GuZlmLEkvVenmgYECbSTuyTZrEFwxK0udHjo6lPsMnRXMmMDuw
+
+###
+POST http://localhost:30700/api/v1/lecture/join
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTY5OTA5MDEwOCwiZXhwIjoxNjk5MDkxOTA4fQ.rAk5GkQGDeitoPcrI6H-sIfUJpx1M15P3FfxiC2l0yYdlT9XpUR7uAd0Lq9cN61HPJxjTat_nrcl9P-LQDg2zA
+Content-Type: application/json
+
+{
+  "lectureId": 2
+}
+
+###
+POST http://localhost:30700/api/v1/lecture/withdraw
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTcwMjUxMjE1NiwiZXhwIjoxNzAyNTEzOTU2fQ.SLVAfZ9n_E9lDdQrJz9iOt0PyGo6_FssyrXk3rgAfXYkmnDfwp5Gzce1lwpjxNAhLQ0ayFROAyZKcSudRlGUdw
+Content-Type: application/json
+
+{
+  "lectureId": 1,
+  "userId": 3
+}
+
+###
+GET http://localhost:30700/api/v1/lecture/recent-posts
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidG9rZW5UeXBlIjoidG9rLWFjYyIsImlhdCI6MTcwMjUxMjE1NiwiZXhwIjoxNzAyNTEzOTU2fQ.SLVAfZ9n_E9lDdQrJz9iOt0PyGo6_FssyrXk3rgAfXYkmnDfwp5Gzce1lwpjxNAhLQ0ayFROAyZKcSudRlGUdw
+
