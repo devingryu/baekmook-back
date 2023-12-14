@@ -6,6 +6,7 @@ import com.devingryu.baekmookback.entity.User
 import com.devingryu.baekmookback.entity.lecture.Lecture
 import com.devingryu.baekmookback.entity.lecture.Post
 import com.devingryu.baekmookback.entity.lecture.LectureUser
+import com.devingryu.baekmookback.entity.lecture.LectureUserId
 import com.devingryu.baekmookback.repository.PostRepository
 import com.devingryu.baekmookback.repository.LectureRepository
 import com.devingryu.baekmookback.repository.LectureUserRepository
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class LectureService(
@@ -72,5 +74,15 @@ class LectureService(
         if (!user.authorities.hasPermission(ROLE_STUDENT)) throw BaseException(BaseResponseCode.ENROLL_STUDENT_ONLY)
 
         return lectureUserRepository.save(LectureUser(user, lecture, false))
+    }
+
+    @Transactional
+    fun withdrawStudent(lectureId: Long, user: User, studentId: Long) {
+        val lecture =
+            lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
+        if (!lecture.users.any { it.user == user && it.isUserLecturer }) throw BaseException(BaseResponseCode.ACCESS_DENIED)
+        val student = lectureUserRepository.findById(LectureUserId(lecture = lectureId, user = studentId))
+            .orElseThrow { BaseException(BaseResponseCode.USER_NOT_FOUND) }
+        lectureUserRepository.delete(student)
     }
 }

@@ -34,11 +34,10 @@ class User(
     @OneToMany(
         mappedBy = "user",
         fetch = FetchType.EAGER,
-        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE]
     )
     private val authorities: Set<UserAuthority> = hashSetOf()
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     val lectures: List<LectureUser> = listOf()
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
@@ -104,7 +103,6 @@ class Authority(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 
-    // Member가 삭제되어 MemberAuthority가 삭제되어도 Authority까지 전파되지 않음
-    @OneToMany(mappedBy = "authority", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @OneToMany(mappedBy = "authority", fetch = FetchType.LAZY)
     val member: List<UserAuthority> = ArrayList()
 }

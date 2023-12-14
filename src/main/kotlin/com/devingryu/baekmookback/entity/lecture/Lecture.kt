@@ -12,10 +12,10 @@ class Lecture (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = -1
 
-    @OneToMany(mappedBy = "lecture", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
     val posts: List<Post> = listOf()
 
-    @OneToMany(mappedBy = "lecture", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
     val users: MutableSet<LectureUser> = hashSetOf()
 
     var isPublic: Boolean = true

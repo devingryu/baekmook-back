@@ -7,6 +7,7 @@ import com.devingryu.baekmookback.dto.BaseResponseCode
 import com.devingryu.baekmookback.dto.request.CreateLectureRequestDto
 import com.devingryu.baekmookback.dto.request.CreatePostRequestDto
 import com.devingryu.baekmookback.dto.request.JoinLectureRequestDto
+import com.devingryu.baekmookback.dto.request.WithdrawLectureRequestDto
 import com.devingryu.baekmookback.dto.response.LectureResponseDto
 import com.devingryu.baekmookback.dto.response.LecturesResponseDto
 import com.devingryu.baekmookback.dto.response.PostResponseDto
@@ -79,6 +80,12 @@ class LectureController(
     @PostMapping("/join")
     fun joinLecture(@RequestBody req: JoinLectureRequestDto, @AuthenticationPrincipal user: User): BaseResponse {
         lectureService.enrollStudent(req.lectureId, user)
+        return BaseResponseCode.OK.toResponse()
+    }
+
+    @PostMapping("/withdraw")
+    fun withdrawLecture(@RequestBody req: WithdrawLectureRequestDto, @AuthenticationPrincipal user: User): BaseResponse {
+        lectureService.withdrawStudent(req.lectureId, user, req.userId)
         return BaseResponseCode.OK.toResponse()
     }
 }
