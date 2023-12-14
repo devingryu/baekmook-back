@@ -4,6 +4,7 @@ import com.devingryu.baekmookback.dto.BaseException
 import com.devingryu.baekmookback.dto.BaseResponse
 import com.devingryu.baekmookback.dto.BaseResponse.Companion.toResponse
 import com.devingryu.baekmookback.dto.BaseResponseCode
+import com.devingryu.baekmookback.util.logger
 import org.springframework.http.HttpMessage
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.NoHandlerFoundException
 
 @RestControllerAdvice
 class ExceptionHandler {
+    val log = logger()
     @ExceptionHandler(BaseException::class)
     protected fun handleBaseException(e: BaseException): ResponseEntity<BaseResponse> {
         return with(e.baseResponseCode) {
@@ -41,6 +43,7 @@ class ExceptionHandler {
     @ExceptionHandler(Exception::class)
     protected fun handleAnyException(e: Exception): ResponseEntity<BaseResponse> {
         val body = BaseResponseCode.INTERNAL_SERVER_ERROR
+        log.error("Fatal Error: ${e.stackTraceToString()}")
         return ResponseEntity.status(body.status)
             .body(body.toResponse())
     }
