@@ -30,9 +30,10 @@ class LectureService(
         if (!user.authorities.hasPermission(ROLE_LECTURER)) throw BaseException(BaseResponseCode.ACCESS_DENIED)
 
         return lectureRepository.save(Lecture(name.trim().take(255), description?.trim()?.take(255)).apply {
-            users.add(
-                LectureUser(user, this, true)
-            )
+            LectureUser(user, this, true).also {
+                lectureUserRepository.save(it)
+                users.add(it)
+            }
         })
     }
 
