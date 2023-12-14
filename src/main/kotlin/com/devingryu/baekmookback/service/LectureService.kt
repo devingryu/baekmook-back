@@ -28,13 +28,9 @@ class LectureService(
     fun createLecture(name: String, description: String?, user: User): Lecture {
         // Check Permissions
         if (!user.authorities.hasPermission(ROLE_LECTURER)) throw BaseException(BaseResponseCode.ACCESS_DENIED)
-
-        return lectureRepository.save(Lecture(name.trim().take(255), description?.trim()?.take(255)).apply {
-            LectureUser(user, this, true).also {
-                lectureUserRepository.save(it)
-                users.add(it)
-            }
-        })
+        val newLecture = lectureRepository.saveAndFlush(Lecture(name.trim().take(255), description?.trim()?.take(255)))
+        lectureUserRepository.save(LectureUser(user, newLecture, true))
+        return newLecture
     }
 
     /** Check First if requesting user has permission to write post */
