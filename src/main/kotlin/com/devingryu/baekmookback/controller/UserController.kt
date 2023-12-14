@@ -55,15 +55,6 @@ class UserController(
         )
     }
 
-    @PostMapping("/api/logout")
-    fun logout(): ResponseEntity<BaseResponse> {
-        val invalidationCookie = userService.logout()
-
-        return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, invalidationCookie)
-            .body(BaseResponseCode.OK.toResponse())
-    }
-
     @PatchMapping("/api/update-user")
     fun updateMemberInfo(
         @RequestBody req: UserUpdateInfoRequestDto,

@@ -61,15 +61,6 @@ class JwtTokenProvider(
         return Pair(token, expiration.time)
     }
 
-    fun createInvalidationCookie(): String {
-        return ResponseCookie.from(REFRESH_COOKIE_NAME, "")
-            .httpOnly(true)
-//            .secure(true)
-            .path("/")
-            .maxAge(0)
-            .build().toString()
-    }
-
 
     /** Retrieves authentication information from access token. Returns null if invalid. */
     fun getAuthentication(token: String): Authentication? {

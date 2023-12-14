@@ -44,9 +44,6 @@ class UserService(private val userRepository: UserRepository, private val jwtTok
     fun login(userPk: Long): TokenInfo
     = jwtTokenProvider.createAccessToken(userPk.toString())
 
-    fun logout(): String
-    = jwtTokenProvider.createInvalidationCookie()
-
     fun refresh(token: String): Pair<User, TokenInfo> {
         if (!jwtTokenProvider.validateToken(token)) throw BaseException(BaseResponseCode.REFRESH_TOKEN_INVALID)
         val userPk = jwtTokenProvider.getUserPkFromRefreshToken(token)
