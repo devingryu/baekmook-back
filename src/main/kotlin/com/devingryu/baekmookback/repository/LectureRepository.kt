@@ -16,6 +16,7 @@ interface LectureRepository: JpaRepository<Lecture, Long> {
 
 interface PostRepository: JpaRepository<Post, Long> {
     fun findAllByLecture_Users_UserOrderByCreatedDateDesc(pageable: Pageable, user: User): Page<Post>
+    fun findAllByLecture_IdOrderByCreatedDateDesc(lectureId: Long): List<Post>
 }
 
 interface LectureUserRepository: JpaRepository<LectureUser, LectureUserId> {}

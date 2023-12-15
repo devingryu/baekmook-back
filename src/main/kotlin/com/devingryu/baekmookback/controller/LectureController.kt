@@ -49,7 +49,8 @@ class LectureController(
         // 자신이 속한 강의가 아닐 경우 존재하지 않는 강의로 표시
         if (!lecture.users.any { user == it.user })
             throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
-        return lecture.posts.map { PostResponseDto.of(it) }
+        val posts = lectureService.getPosts(lecture.id)
+        return posts.map { PostResponseDto.of(it) }
     }
 
     @GetMapping("/recent-posts")

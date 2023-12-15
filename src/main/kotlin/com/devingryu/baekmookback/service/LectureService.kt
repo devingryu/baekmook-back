@@ -49,6 +49,10 @@ class LectureService(
         return postRepository.save(Post(title.trim().take(255), content.trim(), registerer, lecture))
     }
 
+    fun getPosts(lectureId: Long): List<Post> {
+        return postRepository.findAllByLecture_IdOrderByCreatedDateDesc(lectureId)
+    }
+
     fun getRecentPosts(n: Int, page: Int, user: User): Page<Post> {
         val pageRequest = PageRequest.of(page, n)
         return postRepository.findAllByLecture_Users_UserOrderByCreatedDateDesc(pageRequest, user)
