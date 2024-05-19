@@ -50,7 +50,7 @@ class WebSecurityConfig(private val jwtTokenProvider: JwtTokenProvider) {
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("*")
+        configuration.allowedOrigins = listOf("https://bm.devingryu.com,http://localhost:3000")
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
         configuration.allowedHeaders = listOf("authorization", "content-type", "x-auth-token")
         configuration.exposedHeaders = listOf("x-auth-token")
