@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class LectureService(
@@ -25,6 +26,7 @@ class LectureService(
     private val postRepository: PostRepository,
     private val lectureUserRepository: LectureUserRepository,
 ) {
+    @Transactional
     fun createLecture(name: String, description: String?, user: User): Lecture {
         // Check Permissions
         if (!user.authorities.hasPermission(ROLE_LECTURER)) throw BaseException(BaseResponseCode.ACCESS_DENIED)
@@ -35,18 +37,13 @@ class LectureService(
 
     /** Check First if requesting user has permission to write post */
     fun createPost(lectureId: Long, title: String, content: String, registerer: User): Post {
-        // Check Lecture
-        val lecture =
-            lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
-
         // Check Permission
-        if (!(lecture.users.any { registerer.id == it.user.id && it.isUserLecturer }))
+        val lectureUser = lectureUserRepository.findByIdOrNull(LectureUserId(lectureId, registerer.id))
+        if (lectureUser == null || !lectureUser.isUserLecturer)
             throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
-
         if (title.isBlank() || content.isBlank()) throw BaseException(BaseResponseCode.BAD_REQUEST)
-
         // Create Post
-        return postRepository.save(Post(title.trim().take(255), content.trim(), registerer, lecture))
+        return postRepository.save(Post(title.trim().take(255), content.trim(), registerer, lectureUser.lecture))
     }
 
     fun getPosts(lectureId: Long): List<Post> {
@@ -74,14 +71,16 @@ class LectureService(
             lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
         if (!user.authorities.hasPermission(ROLE_STUDENT)) throw BaseException(BaseResponseCode.ENROLL_STUDENT_ONLY)
 
+        lectureUserRepository.findById(LectureUserId(lectureId, user.id)).ifPresent {
+            throw BaseException(BaseResponseCode.ALREADY_ENROLLED)
+        }
         return lectureUserRepository.save(LectureUser(user, lecture, false))
     }
 
-    @Transactional
     fun withdrawStudent(lectureId: Long, user: User, studentId: Long) {
-        val lecture =
-            lectureRepository.findByIdOrNull(lectureId) ?: throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
-        if (!lecture.users.any { it.user == user && it.isUserLecturer }) throw BaseException(BaseResponseCode.ACCESS_DENIED)
+        val lectureUser = lectureUserRepository.findByIdOrNull(LectureUserId(lectureId, user.id))
+        if (lectureUser == null || !lectureUser.isUserLecturer)
+            throw BaseException(BaseResponseCode.LECTURE_NOT_FOUND)
         val student = lectureUserRepository.findById(LectureUserId(lecture = lectureId, user = studentId))
             .orElseThrow { BaseException(BaseResponseCode.USER_NOT_FOUND) }
         lectureUserRepository.delete(student)

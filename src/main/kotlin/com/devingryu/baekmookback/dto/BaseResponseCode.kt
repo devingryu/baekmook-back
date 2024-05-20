@@ -18,5 +18,6 @@ enum class BaseResponseCode(val status: HttpStatus, val message: String, val mes
 
     LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "Could not find lecture.", "강의를 찾을 수 없습니다.", "lecture_not_found_exception"),
     ENROLL_STUDENT_ONLY(HttpStatus.BAD_REQUEST, "Lecture enrollment is student only.", "수강신청은 학생만 가능합니다.", "enroll_student_only_exception"),
+    ALREADY_ENROLLED(HttpStatus.BAD_REQUEST, "You have already enrolled in this lecture.", "이미 수강 중인 강의입니다.", "already_enrolled_exception"),
     OK(HttpStatus.OK, "Request success", "요청 성공", "")
 }
